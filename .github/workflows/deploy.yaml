@@ -14,10 +14,10 @@ jobs:
       - run: docker run -e CI=true emrahisik/react-test npm test
         
       - name: Generate deployment package
-        run: docker build -t emrahisik/multi-client ./client
-        run: docker build -t emrahisik/multi-nginx ./nginx
-        run: docker build -t emrahisik/multi-server ./server
-        run: docker build -t emrahisik/multi-worker ./worker
+      - run: docker build -t emrahisik/multi-client ./client
+      - run: docker build -t emrahisik/multi-nginx ./nginx
+      - run: docker build -t emrahisik/multi-server ./server
+      - run: docker build -t emrahisik/multi-worker ./worker
 
       - name: Push to docker hub
         run: docker push emrahisik/multi-client
