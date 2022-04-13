@@ -10,20 +10,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t emrahisik/docker-react -f Dockerfile.dev .
-      - run: docker run -e CI=true emrahisik/docker-react npm test
+      - run: docker build -t emrahisik/react-test -f ./client/Dockerfile.dev ./client
+      - run: docker run -e CI=true emrahisik/react-test npm test
         
       - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
- 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v20
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: docker-react
-          environment_name: Dockerreact-env
-          existing_bucket_name: elasticbeanstalk-us-east-2-835395908553
-          region: us-east-2
-          version_label: ${{ github.sha }}
-          deployment_package: deploy.zip
+        run: docker build -t emrahisik/multi-client ./client
+        run: docker build -t emrahisik/multi-nginx ./nginx
+        run: docker build -t emrahisik/multi-server ./server
+        run: docker build -t emrahisik/multi-worker ./worker
+
+      - name: Push to docker hub
+        run: docker push emrahisik/multi-client
+        run: docker push emrahisik/multi-nginx
+        run: docker push emrahisik/multi-server
+        run: docker push emrahisik/multi-worker
