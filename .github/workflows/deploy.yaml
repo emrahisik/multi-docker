@@ -16,9 +16,7 @@ jobs:
       - run: docker build -t emrahisik/multi-nginx ./nginx
       - run: docker build -t emrahisik/multi-server ./server
       - run: docker build -t emrahisik/multi-worker ./worker
-
-      - name: Push to docker hub
-        run: docker push emrahisik/multi-client
-        run: docker push emrahisik/multi-nginx
-        run: docker push emrahisik/multi-server
-        run: docker push emrahisik/multi-worker
+      - run: docker push emrahisik/multi-client
+      - run: docker push emrahisik/multi-nginx
+      - run: docker push emrahisik/multi-server
+      - run: docker push emrahisik/multi-worker
