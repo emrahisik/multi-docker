@@ -20,3 +20,18 @@ jobs:
       - run: docker push emrahisik/multi-nginx
       - run: docker push emrahisik/multi-server
       - run: docker push emrahisik/multi-worker
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip ./docker-compose.yml
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: multi-docker
+          environment_name: Multidocker-env
+          existing_bucket_name: elasticbeanstalk-us-east-2-835395908553
+          region: us-east-2
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
